@@ -16,7 +16,7 @@ def recuperer_information(question: str) -> str:
         token=os.getenv("UPSTASH_VECTOR_REST_TOKEN")
     )
 
-    # Execute the query
+    # Recherche sémantique
     query_result = index.query(
         data=question,
         include_metadata=True,
@@ -25,7 +25,7 @@ def recuperer_information(question: str) -> str:
         top_k=3,
     )
 
-    # Concaténer les informations data
+    # Concaténer les données trouvées
     output= " "
     for i in query_result :
         output += i.data + "\n" 
@@ -34,7 +34,7 @@ def recuperer_information(question: str) -> str:
 # 3. Création de l'agent
 agent = Agent(
     name="Jade",
-    instructions="Répond en français avec des émojis",   #A modifier si on veut un style différent !
+    instructions="Répond en français avec des émojis",   # Style modifiable
     model="gpt-4.1-nano",
     tools=[recuperer_information],
 )
@@ -42,6 +42,7 @@ agent = Agent(
 
 # 4. Interface de dialogue  
 def poser_question(question: str):
+    """ Envoie la question à l'agent et renvoie unniquement la réponse finale """
     result = Runner.run_sync(agent, question)
     return result.final_output
 

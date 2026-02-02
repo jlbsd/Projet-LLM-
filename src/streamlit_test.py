@@ -1,11 +1,11 @@
 import streamlit as st
 from test_agent import poser_question
 
-# 1. Initialisation
+# 1. Initialisation de l'historique de la conversation
 if "messages" not in st.session_state: 
     st.session_state.messages = []
 
-st.title(" Jumelle de Jade")  #Titre à changer si besoin
+st.title(" Jumelle de Jade")  #Titre modifiable
 
 # 2. Afficher l'historique
 for m in st.session_state.messages:
@@ -13,7 +13,8 @@ for m in st.session_state.messages:
         st.markdown(m["content"])
 
 # 3. Saisie utilisateur
-if prompt := st.chat_input("What is up?"):
+if prompt := st.chat_input("Pose ta question ici"):
+    # Ajout du message utilisateur
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
@@ -23,5 +24,6 @@ if prompt := st.chat_input("What is up?"):
         response = poser_question(prompt)
         st.markdown(response)
 
+    # Ajout du message assistant
     st.session_state.messages.append({"role": "assistant", "content": response})
 

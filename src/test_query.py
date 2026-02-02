@@ -1,8 +1,8 @@
 from upstash_vector import Index
 import os
-
-# 1. Chargement de la configuration
 from dotenv import load_dotenv
+
+# 1. Chargement de la configuration (.env)
 load_dotenv()
 
 
@@ -13,6 +13,7 @@ index = Index(
 )
 
 # 3. Execution d'une requête exemple
+# Pour vérifier que l'indexation fonctione
 query_result = index.query(
     data="Quelles langues parles-tu ?",
     include_metadata=True,

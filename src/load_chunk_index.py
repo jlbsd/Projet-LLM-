@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from upstash_vector import Index
 
 # 1. Chargement des variables d'environnement (.env)
+# Permet de récupérer automatiquement UPSTASH_VECTOR_REST_URL et TOKEN
 load_dotenv()
 
 # 2. Connexion à l'index Upstash Vector
@@ -16,7 +17,7 @@ index = Index(
 # 3. Fonction de découpage des markdown en 'morceaux' (chunks)
 def chunk_markdown(content, chunk_size=500):
     """
-    Découpe le contenu Markdown en morceaux (chunks)[cite: 62].
+    Découpe le contenu Markdown en morceaux (chunks).
     Ici, on utilise une logique simple par paragraphe ou par taille.
     """
     # Une approche simple consiste à diviser par sections (titres ##)
@@ -33,7 +34,8 @@ def chunk_markdown(content, chunk_size=500):
 # 4. Ingestion des fichiers Markdown et upsert dans l'index 
 def ingest_data():
     # Chemin vers votre dossier de données
-    data_path = "Data/*.md"            #Modifier si la structure du fichier change
+    # A modifier si la strcuture du projet change
+    data_path = "Data/*.md"            
     files = glob.glob(data_path)
     
     if not files:
@@ -45,13 +47,14 @@ def ingest_data():
     for file_path in files:
         file_name = os.path.basename(file_path)
         
+        # Lecture du fichier Markdown
         with open(file_path, "r", encoding="utf-8") as f:
             content = f.read()
         
-        # Étape de découpage (Chunking) [cite: 33, 59]
+        # Étape de découpage (Chunking)
         chunks = chunk_markdown(content)
         
-        # boucle pour parcourir la liste
+        # Boucle pour parcourir la liste et envoyer des chunks dans Upstash Vector
         for idx, chunk in enumerate(chunks, start = 1):
             print(chunk)
             print("----" * 10)
